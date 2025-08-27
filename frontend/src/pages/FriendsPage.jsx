@@ -4,28 +4,30 @@ import axios from "axios";
 
 const FriendsPage = () => {
   const [friends, setFriends] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
 
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/users/friends`, {
-          withCredentials: true,
+        // adjust this endpoint to match your backend route
+       const res = await axios.get(`${API_BASE}/users/friends`, {
+          withCredentials: true, // if using cookies
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // if using JWT tokens
           },
         });
-        setFriends(res.data);
+        setFriends(res.data); // expects array of users
       } catch (err) {
-        console.error("Error fetching friends:", err.response?.data || err.message);
+        console.error("Error fetching friends:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchFriends();
-  }, [API_BASE]);
+  }, []);
 
   if (loading) return <p className="p-6">Loading friends...</p>;
 
